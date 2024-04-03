@@ -2,6 +2,9 @@
 
 # Grab global variable for showing datetime widget, only hide if explicitly disabled
 SHOW_DATETIME=$(tmux show-option -gv @tokyo-night-tmux_show_datetime 2>/dev/null)
+SHOW_DATE=$(tmux show-option -gv @tokyo-night-tmux_show_date 2>/dev/null)
+SHOW_TIME=$(tmux show-option -gv @tokyo-night-tmux_show_time 2>/dev/null)
+
 if [[ "$SHOW_DATETIME" == "0" ]]; then
   exit 0
 fi
@@ -35,4 +38,15 @@ else
     time_string="%H:%M"
 fi
 
-echo "#[fg=#a9b1d6,bg=#24283B] $date_string #[]❬ $time_string "
+output_string=""
+if [[ "$SHOW_DATE" == "0"  && "$SHOW_TIME" == 0 ]]; then
+  exit 0
+elif [[ "$SHOW_DATE" == "0" ]]; then
+  output_string="#[fg=#a9b1d6,bg=#24283B] $time_string "
+elif [[ "$SHOW_TIME" == "0" ]]; then
+  output_string="#[fg=#a9b1d6,bg=#24283B] $date_string "
+else
+  output_string="#[fg=#a9b1d6,bg=#24283B] $date_string #[]❬ $time_string "
+fi
+
+echo "$output_string"
